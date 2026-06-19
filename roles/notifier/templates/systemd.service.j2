@@ -1,0 +1,6 @@
+[Unit]
+Description=Send {{ item }} notification for %i
+
+[Service]
+Type=oneshot
+ExecStart=/opt/notifier/venv/bin/python /opt/notifier/notifier.py {{ item }} %i

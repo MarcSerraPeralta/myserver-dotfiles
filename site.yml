@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes  # runs everything as root
+  roles:
+    - notifier
