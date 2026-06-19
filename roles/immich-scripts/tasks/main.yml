@@ -1,0 +1,46 @@
+---
+- name: Create /opt/immich-scripts directory
+  ansible.builtin.file:
+    path: /opt/immich-scripts
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /opt/immich-scripts/{{ item }}
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - clean_database.py
+    - create_album_for_each_external_folder.py
+    - delete_all_albums.py
+    - move_classified_pictures_to_hdd.py
+
+- name: Copy executable run_script.sh
+  ansible.builtin.copy:
+    src: run_script.sh
+    dest: /opt/immich-scripts/run_script.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Deploy encrypted .env file
+  ansible.builtin.template:
+    src: immich-scripts.env.j2
+    dest: /opt/immich-scripts/immich-scripts.env
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    src: immich-to-external-folder.service
+    dest: /etc/systemd/system/immich-to-external-folder.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd

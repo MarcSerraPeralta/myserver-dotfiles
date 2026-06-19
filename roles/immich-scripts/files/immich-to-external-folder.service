@@ -1,0 +1,7 @@
+[Unit]
+Description=Move the classified pictures in immich to external folder
+OnFailure=notifier-failure@%n
+
+[Service]
+Type=oneshot
+ExecStart=/opt/immich-scripts/run_script.sh

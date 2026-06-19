@@ -4,3 +4,4 @@
   become: yes  # runs everything as root
   roles:
     - notifier
+    - immich-scripts
