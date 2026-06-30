@@ -35,9 +35,12 @@
 
 - name: Copy seasontracker.service
   ansible.builtin.copy:
-    src: seasontracker.service
-    dest: /etc/systemd/system/seasontracker.service
+    src: "{{ item }}"
+    dest: "/opt/seasontracker/{{ item }}"
     owner: root
+  loop:
+    - seasontracker.service
+    - seasontracker.timer
 
 - name: Enable and start service and timer
   ansible.builtin.systemd:
