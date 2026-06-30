@@ -42,7 +42,7 @@
     - seasontracker.service
     - seasontracker.timer
 
-- name: Enable and start service and timer
+- name: Enable service and timer
   ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: true
