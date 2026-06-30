@@ -1,7 +1,7 @@
 ---
 - name: Install system dependencies
   ansible.builtin.apt:
-    name: python3-venv
+    name: python3-virtualenv
     state: present
 
 - name: Create /opt/notifier directory
@@ -48,4 +48,7 @@
     - failure
     - start
     - stop
-  notify: Reload systemd
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true

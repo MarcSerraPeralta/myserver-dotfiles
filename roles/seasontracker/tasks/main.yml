@@ -1,0 +1,49 @@
+---
+- name: Install system dependencies
+  ansible.builtin.apt:
+    name: python3-virtualenv
+    state: present
+
+- name: Create /opt/seasontracker directory
+  ansible.builtin.file:
+    path: /opt/seasontracker
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Copy script and requirements
+  ansible.builtin.copy:
+    src: my_tracked_seasons.yaml
+    dest: /opt/seasontracker/my_tracked_seasons.yaml
+    owner: root
+
+- name: Deploy encrypted .env file
+  ansible.builtin.template:
+    src: seasontracker.env.j2
+    dest: /opt/seasontracker/seasontracker.env
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Install seasontracker in venv
+  ansible.builtin.pip:
+    name: seasontracker==0.2.0
+    virtualenv: /opt/seasontracker/venv
+    virtualenv_python: python3
+
+- name: Copy seasontracker.service
+  ansible.builtin.copy:
+    src: seasontracker.service
+    dest: /etc/systemd/system/seasontracker.service
+    owner: root
+
+- name: Enable and start service and timer
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    daemon_reload: true
+  loop:
+    - seasontracker.service
+    - seasontracker.timer

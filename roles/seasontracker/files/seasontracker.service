@@ -1,0 +1,7 @@
+[Unit]
+Description=Seasontracker for monthly status
+OnFailure=notifier-failure@%n
+
+[Service]
+Type=oneshot
+ExecStart=/opt/seasontracker/venv/bin/seasontracker --env /opt/seasontracker/seasontracker.env /opt/seasontracker/my_tracked_seasons.yaml 

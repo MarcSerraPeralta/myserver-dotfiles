@@ -1,0 +1,51 @@
+- user: marc
+  email: marcserraperalta@gmail.com
+  37854:     # TMDBid from www.themoviedb.org/tv/37854
+    name: One Piece
+    last_watched_season: 1
+  79141:
+    name: Scissor Seven
+    last_watched_season: 2
+  74204:
+    name: Big Mouth
+    last_watched_season: 2
+  60625:
+    name: Rick and Morty
+    last_watched_season: 5
+  81356:
+    name: Sex education
+    last_watched_season: 4
+  86831:
+    name: Love, Sex & Robots
+    last_watched_season: 2
+  75006:
+    name: The Umbrella Academy
+    last_watched_season: 1
+  95557:
+    name: Invincible
+    last_watched_season: 1
+  205715:
+    name: Gen V
+    last_watched_season: 2
+  85922:
+    name: Space Force
+    last_watched_season: 2
+  73021:
+    name: Disenchantment
+    last_watched_season: 1
+  81046:
+    name: The Dragon Prince
+    last_watched_season: 2
+  63639:
+    name: The Expanse
+    last_watched_season: 5
+  86248:
+    name: Upload
+    last_watched_season: 2
+  63174:
+    name: Lucifer
+    last_watched_season: 5
+  60573:
+    name: Silicon Valley
+    last_watched_season: 2
+
