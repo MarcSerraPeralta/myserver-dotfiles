@@ -13,7 +13,7 @@
     mode: '0755'
 
 
-- name: Copy script and requirements
+- name: Copy YAML with tracked seasons
   ansible.builtin.copy:
     src: my_tracked_seasons.yaml
     dest: /opt/seasontracker/my_tracked_seasons.yaml
