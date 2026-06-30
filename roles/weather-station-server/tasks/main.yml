@@ -1,0 +1,27 @@
+---
+- name: Create /opt/weather-station-server directory
+  ansible.builtin.file:
+    path: /opt/weather-station-server
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy Python script
+  ansible.builtin.copy:
+    src: weather-station-server.py
+    dest: /opt/weather-station-server/weather-station-server.py
+    owner: root
+
+- name: Copy weather-station-service.service
+  ansible.builtin.copy:
+    src: weather-station-server.service
+    dest: /etc/systemd/system/weather-station-server.service
+    owner: root
+
+- name: Enable and start service
+  ansible.builtin.systemd:
+    name: weather-station-server.service
+    enabled: true
+    state: started
+    daemon_reload: true

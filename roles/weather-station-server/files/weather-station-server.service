@@ -1,0 +1,13 @@
+[Unit]
+Description=Python Server for my Weather Station
+After=network.target
+Wants=notifier-start@%n
+OnSuccess=notifier-stop@%n
+OnFailure=notifier-failure@%n
+
+[Service]
+ExecStart=/bin/python3 /opt/weather-station-server/weather-station-server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
