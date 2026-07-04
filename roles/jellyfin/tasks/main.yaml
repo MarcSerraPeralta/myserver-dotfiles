@@ -8,14 +8,19 @@
 - name: Download Jellyfin GPG key
   ansible.builtin.get_url:
     url: https://repo.jellyfin.org/jellyfin_team.gpg.key
-    dest: /etc/apt/keyrings/jellyfin.gpg
+    dest: /tmp/jellyfin.gpg.key
     mode: "0644"
+
+- name: Dearmor Jellyfin GPG key
+  ansible.builtin.command:
+    cmd: gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg /tmp/jellyfin.gpg.key
+    creates: /etc/apt/keyrings/jellyfin.gpg
 
 - name: Add Jellyfin repository to APT
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/jellyfin.list
     content: |
-      deb [signed-by=/etc/apt/keyrings/jellyfin.gpg] https://repo.jellyfin.org/debian {{ ansible_distribution_release }} main
+      deb [signed-by=/etc/apt/keyrings/jellyfin.gpg] https://repo.jellyfin.org/ubuntu {{ ansible_distribution_release }} main
     mode: "0644"
 
 - name: Install Jellyfin
