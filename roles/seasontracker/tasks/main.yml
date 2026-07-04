@@ -33,10 +33,10 @@
     virtualenv: /opt/seasontracker/venv
     virtualenv_python: python3
 
-- name: Copy seasontracker.service
+- name: Copy seasontracker service and timer
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: "/opt/seasontracker/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
     owner: root
   loop:
     - seasontracker.service
