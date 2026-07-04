@@ -9,4 +9,5 @@
     - weather-station-server
     - email-archive
     - docker
+    - grafana
     - immich-scripts
