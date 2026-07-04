@@ -36,10 +36,6 @@
       Components: stable
       Signed-By: /etc/apt/keyrings/docker.asc
 
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: true
-
 - name: Install Docker packages
   ansible.builtin.apt:
     name:
@@ -49,6 +45,7 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+    update_cache: true
 
 - name: Ensure Docker service is enabled
   ansible.builtin.systemd:
