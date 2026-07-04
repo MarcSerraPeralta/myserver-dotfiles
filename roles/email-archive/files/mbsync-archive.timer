@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Gmail Archive Sync Monthly
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

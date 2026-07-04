@@ -1,0 +1,29 @@
+# GMAIL REMOTE STORAGE
+IMAPAccount gmail
+Host imap.gmail.com
+User marcserraperalta@gmail.com
+PassCmd "cat /opt/email-archive/gmail-app-password.env"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+SSLVersions TLSv1.2
+Timeout 120
+
+IMAPStore gmail-remote
+Account gmail
+
+# LOCAL ARCHIVE STORAGE
+MaildirStore gmail-local
+SubFolders Verbatim
+Flatten .
+Path /srv_msata/mail-archive/gmail/
+Inbox /srv_msata/mail-archive/gmail/Inbox
+
+# ARCHIVE CHANNEL
+Channel gmail
+Far :gmail-remote:
+Near :gmail-local:
+Patterns "INBOX" "[Gmail]/Enviats"
+Create Near
+Expunge None
+Sync Pull
+

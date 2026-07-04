@@ -1,0 +1,67 @@
+---
+- name: Install isync
+  ansible.builtin.apt:
+    name: isync
+    state: present
+    update_cache: true
+
+- name: Create email archive directory
+  ansible.builtin.file:
+    path: "/opt/email-archive"
+    state: directory
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0755"
+
+- name: Copy mbsync config
+  ansible.builtin.copy:
+    src: .mbsyncrc
+    dest: "/opt/email-archive/.mbsyncrc"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0644"
+
+- name: Install Gmail app password file
+  ansible.builtin.template:
+    src: gmail-app-password.env.j2
+    dest: "/opt/email-archive/gmail-app-password.env"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0600"
+
+- name: Copy cleanup script
+  ansible.builtin.copy:
+    src: remove_big_files_from_mail-archive.sh
+    dest: "/opt/email-archive/remove_big_files_from_mail-archive.sh"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0755"
+
+- name: Create mail archive directory
+  ansible.builtin.file:
+    path: /srv_msata/mail-archive/gmail
+    state: directory
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0700"
+
+- name: Install mbsync service and timer
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: "0644"
+  loop:
+    - mbsync-archive.service
+    - mbsync-archive.timer
+
+- name: Enable service and timer
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    daemon_reload: true
+  loop:
+    - seasontracker.service
+    - seasontracker.timer
+

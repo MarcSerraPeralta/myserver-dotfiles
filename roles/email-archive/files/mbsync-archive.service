@@ -1,0 +1,10 @@
+[Unit]
+Description=Incremental Gmail Archive Sync
+OnFailure=notifier-failure@%n
+
+[Service]
+User=marc
+Type=oneshot
+ExecStart=/usr/bin/mbsync -Va -D --config=/opt/email-archive/.mbsyncrc
+ExecStartPost=/opt/email-archive/remove_big_files_from_mail-archive.sh
+SuccessExitStatus=1

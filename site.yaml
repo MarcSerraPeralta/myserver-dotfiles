@@ -7,5 +7,6 @@
     - notifier
     - seasontracker
     - weather-station-server
+    - email-archive
     - docker
     - immich-scripts
