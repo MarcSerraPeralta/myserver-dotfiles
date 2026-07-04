@@ -5,6 +5,7 @@
   roles:
     - initial-setup
     - notifier
-    - immich-scripts
     - seasontracker
     - weather-station-server
+    - docker
+    - immich-scripts
