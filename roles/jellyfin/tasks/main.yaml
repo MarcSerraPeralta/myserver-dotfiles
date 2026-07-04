@@ -1,0 +1,50 @@
+---
+- name: Create keyrings directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Download Jellyfin GPG key
+  ansible.builtin.get_url:
+    url: https://repo.jellyfin.org/jellyfin_team.gpg.key
+    dest: /etc/apt/keyrings/jellyfin.gpg
+    mode: "0644"
+
+- name: Add Jellyfin repository to APT
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/jellyfin.list
+    content: |
+      deb [signed-by=/etc/apt/keyrings/jellyfin.gpg] https://repo.jellyfin.org/debian {{ ansible_distribution_release }} main
+    mode: "0644"
+
+- name: Install Jellyfin
+  ansible.builtin.apt:
+    name: jellyfin
+    state: present
+    update_cache: true
+    
+- name: Configure Jellyfin network.xml
+  ansible.builtin.copy:
+    src: network.xml
+    dest: /etc/jellyfin/network.xml
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart jellyfin
+
+- name: Configure Jellyfin system.xml
+  ansible.builtin.copy:
+    src: system.xml
+    dest: /etc/jellyfin/system.xml
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart jellyfin
+
+- name: Enable and start Jellyfin
+  ansible.builtin.systemd:
+    name: jellyfin
+    enabled: true
+    state: started
+
