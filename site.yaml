@@ -3,6 +3,7 @@
   connection: local
   become: yes  # runs everything as root
   roles:
+    - initial-setup
     - notifier
     - immich-scripts
     - seasontracker

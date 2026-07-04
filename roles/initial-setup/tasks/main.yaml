@@ -1,0 +1,9 @@
+- name: Upgrade packages
+  apt:
+    update_cache: true
+    upgrade: dist
+    autoremove: true
+
+- name: Set timezone
+  timezone:
+    name: Europe/Amsterdam
