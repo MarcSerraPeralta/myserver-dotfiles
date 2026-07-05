@@ -1,0 +1,36 @@
+---
+- name: Create Papra directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /opt/papra
+    - /opt/papra/app-data
+    - /opt/papra/app-data/db
+    - /opt/papra/app-data/documents
+
+- name: Copy docker-compose.yaml
+  ansible.builtin.copy:
+    src: docker-compose.yaml
+    dest: /opt/papra/docker-compose.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Papra
+
+- name: Copy papra.env
+  ansible.builtin.template:
+    src: papra.env.j2
+    dest: /opt/papra/papra.env
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Restart Papra
+
+- name: Start Papra
+  community.docker.docker_compose_v2:
+    project_src: /opt/papra
+    state: present

@@ -1,0 +1,5 @@
+---
+- name: Restart Papra
+  community.docker.docker_compose_v2:
+    project_src: /opt/papra
+    state: restarted

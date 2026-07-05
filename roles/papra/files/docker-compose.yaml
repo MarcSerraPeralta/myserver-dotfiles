@@ -1,0 +1,14 @@
+services:
+  papra:
+    container_name: papra
+    image: ghcr.io/papra-hq/papra:latest-root
+    restart: unless-stopped
+
+    ports:
+      - "1221:1221"
+
+    env_file:
+      - papra.env
+
+    volumes:
+      - ./app-data:/app/app-data

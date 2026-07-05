@@ -10,5 +10,6 @@
     - email-archive
     - docker
     - grafana
+    - papra
     - jellyfin
     - immich-scripts
