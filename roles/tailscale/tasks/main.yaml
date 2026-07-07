@@ -1,0 +1,56 @@
+---
+- name: Install Tailscale
+  ansible.builtin.shell: curl -fsSL https://tailscale.com/install.sh | sh
+  args:
+    creates: /usr/bin/tailscale
+
+- name: Install UDP-GRO configuration script
+  ansible.builtin.copy:
+    src: 50-tailscale
+    dest: /etc/networkd-dispatcher/routable.d/50-tailscale
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Run UDP-GRO configuration
+  ansible.builtin.command:
+    cmd: /etc/networkd-dispatcher/routable.d/50-tailscale
+  register: udp_gro
+  changed_when: false
+
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: true
+
+- name: Enable IPv6 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    state: present
+    reload: true
+
+- name: Set routed traffic policy
+  community.general.ufw:
+    direction: routed
+    policy: deny
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+
+- name: Enable Tailscale
+  ansible.builtin.command:
+    cmd: >
+      tailscale up
+      --accept-dns=false
+      --advertise-exit-node
+      --advertise-routes=192.168.0.0/24
+

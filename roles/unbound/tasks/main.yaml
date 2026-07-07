@@ -1,0 +1,26 @@
+---
+- name: Install unbound
+  ansible.builtin.apt:
+    name: unbound
+    state: present
+    update_cache: true
+
+- name: Copy Unbound Pi-hole config
+  ansible.builtin.copy:
+    src: pi-hole.conf
+    dest: /etc/unbound/unbound.conf.d/pi-hole.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+# WHY DO I NEED TO RESTART IT IF IT IS NOT YET ENABLED??
+- name: Restart Unbound
+  ansible.builtin.systemd:
+    name: unbound
+    state: restarted
+
+- name: Enable and start unbound service
+  ansible.builtin.systemd:
+    name: unbound
+    enabled: true
+    state: started

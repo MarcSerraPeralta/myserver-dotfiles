@@ -1,0 +1,35 @@
+---
+# THIS SHOULD BE CHANGED TO THE CADDY+CLOUDFLARE VERSION
+#
+#
+- name: Install Caddy
+  ansible.builtin.apt:
+    name: caddy
+    state: present
+    update_cache: true
+
+# CADDY SHOULD BE INSTALLED BEFORE PI-HOLE, THUS THIS CAN BE AVOIDED!!
+- name: Stop Pi-hole FTL service
+  ansible.builtin.systemd:
+    name: pihole-FTL
+    state: stopped
+
+- name: Enable and start Caddy
+  ansible.builtin.systemd:
+    name: caddy
+    enabled: true
+    state: started
+
+# CADDY SHOULD BE INSTALLED BEFORE PI-HOLE, THUS THIS CAN BE AVOIDED!!
+- name: Start Pi-hole FTL service
+  ansible.builtin.systemd:
+    name: pihole-FTL
+    state: started
+
+# IS THIS NECESSARY????
+- name: Ensure Caddy PKI directory exists
+  ansible.builtin.file:
+    path: /var/lib/caddy/.local/share/caddy/pki/authorities/local
+    state: directory
+    mode: "0755"
+

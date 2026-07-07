@@ -1,0 +1,72 @@
+---
+- name: Create Synapse config directory
+  ansible.builtin.file:
+    path: /opt/synapse
+    state: directory
+    mode: "0755"
+
+- name: Create Synapse data directory
+  ansible.builtin.file:
+    path: /srv/synapse
+    state: directory
+    owner: "991"
+    group: "991"
+    mode: "0750"
+
+- name: Deploy Synapse docker-compose file
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /opt/synapse/docker-compose.yml
+    mode: "0644"
+
+- name: Generate Synapse config if missing
+  community.docker.docker_container:
+    name: synapse-init
+    image: matrixdotorg/synapse:latest
+    command: >
+      generate
+    state: started
+    auto_remove: true
+    pull: true
+    volumes:
+      - /srv/synapse:/data
+    env:
+      SYNAPSE_SERVER_NAME: "{{ synapse_server_name }}"
+      SYNAPSE_REPORT_STATS: "yes"
+  args:
+    creates: /srv/synapse/homeserver.yaml
+
+# WTF IS THIS COMMAND DOING? NOTHING?
+- name: Ensure homeserver.yaml exists in Synapse volume
+  ansible.builtin.command:
+    cmd: mv /srv/synapse/homeserver.yaml /srv/synapse/homeserver.yaml
+    creates: /srv/synapse/homeserver.yaml
+  changed_when: false
+
+# I NEED TO COPY MY CUSTOM HOMESERVER.YAML FILE!!
+# USE ANSIBLE VAULT BECAUSE IT CONTAINS SECRETS!!
+
+- name: Start Synapse
+  community.docker.docker_compose_v2:
+    project_src: /opt/synapse
+    state: present
+
+- name: Wait for Synapse API
+  ansible.builtin.uri:
+    url: "http://localhost:8008/_matrix/client/versions"
+    status_code: 200
+    retries: 20
+    delay: 5
+
+- name: Create Synapse admin user
+  ansible.builtin.command:
+    cmd: >
+      docker exec synapse register_new_matrix_user
+      -u admin
+      -p {{ synapse_admin_password }}
+      -a
+      -k "{{ synapse_registration_secret }}"
+      http://localhost:8008
+  register: synapse_admin
+  failed_when: false
+  changed_when: "'success' in synapse_admin.stdout or synapse_admin.rc == 0"

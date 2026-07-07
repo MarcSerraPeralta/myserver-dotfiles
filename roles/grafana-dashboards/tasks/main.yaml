@@ -1,0 +1,43 @@
+---
+- name: Install Infinity datasource plugin
+  ansible.builtin.command:
+    cmd: grafana-cli plugins install yesoreyeram-infinity-datasource
+    creates: /var/lib/grafana/plugins/yesoreyeram-infinity-datasource
+
+- name: Restart Grafana
+  ansible.builtin.systemd:
+    name: grafana-server
+    state: restarted
+
+## PROBABLY THIS SHOULD GO TO A SEPARATE TASK
+- name: Install monitoring HTTP service
+  ansible.builtin.copy:
+    src: monitoring-data-http.service
+    dest: /etc/systemd/system/monitoring-data-http.service
+    mode: "0644"
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable monitoring HTTP service
+  ansible.builtin.systemd:
+    name: monitoring-data-http
+    enabled: true
+    state: started
+
+## IMPROVE!!!
+- name: Ensure Grafana SMTP config section exists (placeholder)
+  ansible.builtin.lineinfile:
+    path: /etc/grafana/grafana.ini
+    line: "# SMTP config managed manually or via template"
+    create: false
+
+- name: Restart Grafana
+  ansible.builtin.systemd:
+    name: grafana-server
+    state: restarted
+
+# I ALSO NEED TO UPLOAD THE DASHBOARDS THAT I HAVE SAVED!!
+
+

@@ -1,0 +1,37 @@
+---
+- name: Create Immich installation directory
+  ansible.builtin.file:
+    path: /opt/immich
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy Immich Docker Compose file
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /opt/immich/docker-compose.yml
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create Immich data directory
+  ansible.builtin.file:
+    path: /srv/immich
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Create external library directory
+  ansible.builtin.file:
+    path: /srv/immich/external_library
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Deploy Immich
+  community.docker.docker_compose_v2:
+    project_src: /opt/immich
+    state: present
