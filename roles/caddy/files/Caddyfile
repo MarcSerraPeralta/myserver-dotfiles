@@ -1,0 +1,97 @@
+# The Caddyfile is an easy way to configure your Caddy web server.
+#
+# Unless the file starts with a global options block, the first
+# uncommented line is always the address of your site.
+#
+# To use your own domain name (with automatic HTTPS), first make
+# sure your domain's A/AAAA DNS records are properly pointed to
+# this machine's public IP, then replace ":80" below with your
+# domain name.
+
+servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+        # Set this path to your site's directory.
+        root * /var/www/homepage
+
+        # Enable the static file server.
+        file_server
+
+        # Another common task is to set up a reverse proxy:
+        # reverse_proxy localhost:8080
+
+        # Or serve a PHP site through php-fpm:
+        # php_fastcgi localhost:9000
+}
+
+# Refer to the Caddy docs for more information:
+# https://caddyserver.com/docs/caddyfile
+
+pihole.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+        @root path /
+        rewrite @root /admin
+
+        reverse_proxy 192.168.0.50:8080
+}
+
+jellyfin.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+        reverse_proxy 192.168.0.50:8096
+}
+
+immich.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+        reverse_proxy 100.100.50.50:2283
+}
+
+grafana.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+        reverse_proxy 100.100.50.50:3000
+}
+
+matrix.servidoret.com {
+        @not_tailscale {
+                not remote_ip 100.64.0.0/10
+        }
+        respond @not_tailscale 403
+
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+        reverse_proxy 172.19.0.2:8008 {
+                header_up Host {host}
+                header_up X-Forwarded-Proto https
+                header_up X-Forwarded-Port 443
+        }
+}
+
+cites.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+        reverse_proxy /api/* localhost:5000
+        root * /var/www/cites
+        file_server
+}
+
+papra.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+        reverse_proxy 100.100.50.50:1221
+}
+

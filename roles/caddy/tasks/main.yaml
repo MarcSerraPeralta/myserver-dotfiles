@@ -1,0 +1,76 @@
+---
+- name: Install Caddy package to create+start the systemd service
+  ansible.builtin.apt:
+    name: caddy
+    state: present
+
+- name: Install Go
+  ansible.builtin.apt:
+    name: golang-go
+    state: present
+
+- name: Create temporary workspace to install xcaddy
+  ansible.builtin.file:
+    path: /tmp/xcaddy-build
+    state: directory
+    mode: "0755"
+
+- name: Install xcaddy temporarily
+  ansible.builtin.command:
+    cmd: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+  environment:
+    GOPATH: /tmp/xcaddy-build
+  args:
+    creates: /tmp/xcaddy-build/bin/xcaddy
+
+- name: Create temporary workspace to install caddy
+  ansible.builtin.file:
+    path: /tmp/caddy-build
+    state: directory
+    mode: "0755"
+
+- name: Build Caddy with Cloudflare DNS plugin
+  ansible.builtin.command:
+    cmd: /tmp/xcaddy-build/bin/xcaddy build --with github.com/caddy-dns/cloudflare
+    chdir: /tmp/caddy-build
+  args:
+    creates: /tmp/caddy-build/caddy
+
+- name: Install custom Caddy binary
+  ansible.builtin.copy:
+    src: /tmp/caddy-build/caddy
+    dest: /usr/bin/caddy
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+  notify: Restart caddy
+
+- name: Copy Caddyfile
+  ansible.builtin.copy:
+    src: Caddyfile
+    dest: /etc/caddy/Caddyfile
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart caddy
+
+- name: Create Caddy systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/caddy.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy Caddy environment override
+  ansible.builtin.template:
+    src: env.conf.j2
+    dest: /etc/systemd/system/caddy.service.d/env.conf
+    owner: root
+    group: root
+    mode: "0600"
+  notify:
+    - Reload systemd
+    - Restart caddy
+
