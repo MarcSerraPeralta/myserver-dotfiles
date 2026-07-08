@@ -1,0 +1,119 @@
+---
+- name: Install Pi-hole dependencies
+  ansible.builtin.apt:
+    name:
+      - curl
+    state: present
+    update_cache: true
+
+- name: Ensure Pi-hole group exists
+  ansible.builtin.group:
+    name: pihole
+    system: true
+
+- name: Ensure Pi-hole user exists
+  ansible.builtin.user:
+    name: pihole
+    group: pihole
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: false
+
+- name: Create Pi-hole configuration directory
+  ansible.builtin.file:
+    path: /etc/pihole
+    state: directory
+    owner: pihole
+    group: pihole
+    mode: "0755"
+
+- name: Copy Pi-hole configuration
+  ansible.builtin.template:
+    src: pihole.toml.j2
+    dest: /etc/pihole/pihole.toml
+    owner: pihole
+    group: pihole
+    mode: "0640"
+  notify:
+    - Restart pihole-FTL
+
+- name: Install Pi-hole
+  ansible.builtin.shell:
+    cmd: curl -sSL https://install.pi-hole.net | bash /dev/stdin --unattended
+    creates: /etc/systemd/system/pihole-FTL.service
+
+- name: Allow Pi-hole web interface HTTP
+  community.general.ufw:
+    rule: allow
+    port: "8080"
+    proto: tcp
+
+- name: Allow Pi-hole DNS TCP
+  community.general.ufw:
+    rule: allow
+    port: "53"
+    proto: tcp
+
+- name: Allow Pi-hole DNS UDP
+  community.general.ufw:
+    rule: allow
+    port: "53"
+    proto: udp
+
+- name: Allow Pi-hole DHCP TCP
+  community.general.ufw:
+    rule: allow
+    port: "67"
+    proto: tcp
+
+- name: Allow Pi-hole DHCP UDP
+  community.general.ufw:
+    rule: allow
+    port: "67"
+    proto: udp
+
+- name: Allow NTP UDP
+  community.general.ufw:
+    rule: allow
+    port: "123"
+    proto: udp
+
+- name: Install SQLite
+  ansible.builtin.apt:
+    name: sqlite3
+    state: present
+
+- name: Add Pi-hole adlists
+  ansible.builtin.command:
+    cmd: >
+      sqlite3 /etc/pihole/gravity.db
+      "INSERT OR IGNORE INTO adlist (address, enabled)
+      VALUES ('{{ item }}', 1);"
+  loop:
+    - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt
+  changed_when: false
+
+- name: Update Pi-hole gravity database
+  ansible.builtin.command:
+    cmd: pihole -g
+  changed_when: false
+
+- name: Create pihole-FTL systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/pihole-FTL.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Configure pihole-FTL systemd override
+  ansible.builtin.copy:
+    src: override.conf
+    dest: /etc/systemd/system/pihole-FTL.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart pihole-FTL

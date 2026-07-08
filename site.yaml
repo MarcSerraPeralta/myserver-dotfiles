@@ -6,6 +6,7 @@
     - initial-setup
     - notifier
     - caddy
+    - pihole
     - tailscale
     - seasontracker
     - weather-station-server
