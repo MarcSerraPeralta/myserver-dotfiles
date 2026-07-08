@@ -4,8 +4,9 @@
   become: yes  # runs everything as root
   roles:
     - initial-setup
-    - caddy
     - notifier
+    - caddy
+    - tailscale
     - seasontracker
     - weather-station-server
     - email-archive

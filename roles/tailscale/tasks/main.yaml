@@ -1,0 +1,107 @@
+---
+- name: Install prerequisites
+  ansible.builtin.apt:
+    name:
+      - curl
+      - ca-certificates
+    state: present
+    update_cache: true
+
+- name: Create keyrings directory
+  ansible.builtin.file:
+    path: /usr/share/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download Tailscale archive key
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.noarmor.gpg"
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install Tailscale APT repository
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ansible_distribution_release }}.tailscale-keyring.list"
+    dest: /etc/apt/sources.list.d/tailscale.list
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install Tailscale
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+    update_cache: true
+
+- name: Enable and start tailscaled
+  ansible.builtin.systemd:
+    name: tailscaled
+    enabled: true
+    state: started
+
+- name: Install UDP-GRO configuration script
+  ansible.builtin.copy:
+    src: 50-tailscale
+    dest: /etc/networkd-dispatcher/routable.d/50-tailscale
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Run UDP-GRO configuration
+  ansible.builtin.command:
+    cmd: /etc/networkd-dispatcher/routable.d/50-tailscale
+  register: udp_gro
+  changed_when: false
+
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: true
+
+- name: Enable IPv6 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    state: present
+    reload: true
+
+- name: Set routed traffic policy
+  community.general.ufw:
+    direction: routed
+    policy: deny
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+
+- name: Configure Tailscale
+  ansible.builtin.command:
+    cmd: >
+      tailscale up
+      --accept-dns=false
+      --advertise-exit-node
+      --advertise-routes=192.168.0.0/24
+  changed_when: false
+
+- name: Install tailscaled service override
+  ansible.builtin.copy:
+    src: override.conf
+    dest: /etc/systemd/system/tailscaled.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart tailscaled
+
