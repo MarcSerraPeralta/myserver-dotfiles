@@ -1,0 +1,21 @@
+---
+- name: Install Unbound
+  ansible.builtin.apt:
+    name: unbound
+    state: present
+    update_cache: true
+
+- name: Copy Unbound configuration
+  ansible.builtin.copy:
+    src: pi-hole.conf
+    dest: /etc/unbound/unbound.conf.d/pi-hole.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart unbound
+
+- name: Enable and start Unbound
+  ansible.builtin.systemd:
+    name: unbound
+    enabled: true
+    state: started

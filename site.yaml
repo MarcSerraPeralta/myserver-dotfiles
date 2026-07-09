@@ -6,6 +6,7 @@
     - initial-setup
     - notifier
     - caddy
+    - unbound
     - pihole
     - tailscale
     - seasontracker
