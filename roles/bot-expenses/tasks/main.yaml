@@ -1,0 +1,93 @@
+---
+- name: Install Python dependencies
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-virtualenv
+    state: present
+    update_cache: true
+
+- name: Create bot application directory
+  ansible.builtin.file:
+    path: /opt/bot-expenses
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Copy Matrix expenses bot files
+  ansible.builtin.copy:
+    src: matrix-bot/
+    dest: /opt/bot-expenses/
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Install Python requirements
+  ansible.builtin.pip:
+    requirements: /opt/bot-expenses/requirements.txt
+    virtualenv: /opt/bot-expenses/venv
+    virtualenv_python: python3
+
+- name: Configure bot environment
+  ansible.builtin.template:
+    src: bot-expenses.env.j2
+    dest: /opt/bot-expenses/bot-expenses.env
+    owner: marc
+    group: marc
+    mode: "0600"
+
+- name: Initialize Matrix bot credentials
+  ansible.builtin.command:
+    cmd: /opt/bot-expenses/venv/bin/python prepare_bot.py
+    chdir: /opt/bot-expenses
+  args:
+    creates: "{{ bot_expenses_store_dir }}/{{ bot_expenses_credentials_file }}"
+  environment:
+    PATH: "/opt/bot-expenses/bin:{{ ansible_env.PATH }}"
+
+- name: Create expenses root directory
+  ansible.builtin.file:
+    path: /srv_msata/expenses
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0700"
+
+- name: Create expenses subdirectories
+  ansible.builtin.file:
+    path: "/srv_msata/expenses/{{ item }}"
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+  loop:
+    - data
+    - plots
+
+- name: Install bot systemd service
+  ansible.builtin.copy:
+    src: bot-expenses.service
+    dest: /etc/systemd/system/bot-expenses.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+
+- name: Install bot systemd timer
+  ansible.builtin.copy:
+    src: bot-expenses.timer
+    dest: /etc/systemd/system/bot-expenses.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+
+- name: Enable bot timer
+  ansible.builtin.systemd:
+    name: bot-expenses.timer
+    enabled: true
+    state: started

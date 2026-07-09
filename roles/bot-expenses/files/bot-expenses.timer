@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Matrix expenses bot monthly on the 1st day at 7am
+
+[Timer]
+OnCalendar=*-*-01 07:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

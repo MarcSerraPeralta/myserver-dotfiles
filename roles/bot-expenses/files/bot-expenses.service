@@ -1,0 +1,10 @@
+[Unit]
+Description=Matrix expenses bot
+OnFailure=notifier-failure@%n
+
+[Service]
+Type=oneshot
+User=marc
+WorkingDirectory=/opt/bot-expenses
+ExecStart=/opt/bot-expenses/venv/bin/python /opt/bot-expenses/bot_expenses.py
+Nice=10

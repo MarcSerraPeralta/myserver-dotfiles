@@ -1,0 +1,6 @@
+---
+bot_expenses_store_dir: /opt/bot-expenses/store
+bot_expenses_credentials_file: credentials.json
+
+matrix_bot_user_id: "@bot-expenses:servidoret.com"
+matrix_summary_room_id: "!GlmvYtypNZQkTjrsgp:servidoret.com"
