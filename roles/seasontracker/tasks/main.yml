@@ -1,7 +1,10 @@
 ---
 - name: Install system dependencies
   ansible.builtin.apt:
-    name: python3-virtualenv
+    name:
+      - python3
+      - python3-pip
+      - python3-virtualenv
     state: present
 
 - name: Create /opt/seasontracker directory
