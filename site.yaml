@@ -12,6 +12,7 @@
     - seasontracker
     - weather-station-server
     - email-archive
+    - thinkpad-backup
     - docker
     - grafana
     - papra

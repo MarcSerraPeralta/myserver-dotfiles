@@ -1,0 +1,16 @@
+---
+- name: Create backup root directory
+  ansible.builtin.file:
+    path: /srv/backups
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Create ThinkPad backup directory
+  ansible.builtin.file:
+    path: /srv/backups/thinkpad
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0775"
