@@ -1,0 +1,47 @@
+---
+- name: Install Java
+  ansible.builtin.apt:
+    name: openjdk-25-jre-headless
+    state: present
+    update_cache: true
+
+- name: Create Minecraft directory
+  ansible.builtin.file:
+    path: /srv_msata/minecraft
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Download Fabric server jar
+  ansible.builtin.get_url:
+    url: "https://meta.fabricmc.net/v2/versions/loader/{{ minecraft_version }}/{{ fabric_loader_version }}/{{ fabric_installer_version }}/server/jar"
+    dest: "/srv_msata/minecraft/{{ minecraft_server_jar }}"
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Accept Minecraft EULA
+  ansible.builtin.copy:
+    src: eula.txt
+    dest: "/srv_msata/minecraft/eula.txt"
+    owner: marc
+    group: marc
+    mode: "0644"
+
+- name: Create mods directory
+  ansible.builtin.file:
+    path: /srv_msata/minecraft/mods
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Download Minecraft mods
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "/srv_msata/minecraft/mods/{{ item.name }}"
+    owner: marc
+    group: marc
+    mode: "0644"
+  loop: "{{ minecraft_mods }}"

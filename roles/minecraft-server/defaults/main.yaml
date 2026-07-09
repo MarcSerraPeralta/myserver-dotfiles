@@ -1,0 +1,40 @@
+---
+minecraft_version: "26.1.2"
+fabric_loader_version: "0.19.2"
+fabric_installer_version: "1.1.1"
+
+minecraft_server_jar: "fabric-server-mc.{{ minecraft_version }}-loader.{{ fabric_loader_version }}-launcher.{{ fabric_installer_version }}.jar"
+
+minecraft_mods:
+  - name: Chunky-Fabric-1.5.3.jar
+    url: "https://edge.forgecdn.net/files/8036/332/Chunky-Fabric-1.5.3.jar"
+
+  - name: DistantHorizons-3.0.3-b-26.1.2-fabric-neoforge.jar
+    url: "https://cdn.modrinth.com/data/uCdwusMi/versions/FJrLlu3p/DistantHorizons-3.0.3-b-26.1.2-fabric-neoforge.jar"
+
+  - name: fabric-api-0.149.1+26.1.2.jar
+    url: "https://cdn.modrinth.com/data/P7dR8mSH/versions/BLz7ETCw/fabric-api-0.149.1%2B26.1.2.jar"
+
+  - name: ferritecore-9.0.0-fabric.jar
+    url: "https://cdn.modrinth.com/data/uXXizFIs/versions/d5ddUdiB/ferritecore-9.0.0-fabric.jar"
+
+  - name: lithium-fabric-0.24.2+mc26.1.2.jar
+    url: "https://cdn.modrinth.com/data/gvQqBUqZ/versions/R7MxYvuW/lithium-fabric-0.24.2%2Bmc26.1.2.jar"
+
+  - name: lithostitched-1.7.7-fabric-26.1.jar
+    url: "https://cdn.modrinth.com/data/XaDC71GB/versions/dUL7i4Qf/lithostitched-1.7.7-fabric-26.1.jar"
+
+  - name: Structory_26.1_v1.3.16.jar
+    url: "https://cdn.modrinth.com/data/aKCwCJlY/versions/Nvh2sSPX/Structory_26.1_v1.3.16.jar"
+
+  - name: Terralith_26.1_v2.6.1_Fabric.jar
+    url: "https://cdn.modrinth.com/data/8oi3bsk5/versions/aYFEo9A5/Terralith_26.1_v2.6.1_Fabric.jar"
+
+  - name: cristellib-fabric-26.1.2-3.1.4.jar
+    url: "https://cdn.modrinth.com/data/cl223EMc/versions/GBVtWlUN/cristellib-fabric-26.1.2-3.1.4.jar"
+
+  - name: t_and_t-fabric-neoforge-1.13.11.jar
+    url: "https://edge.forgecdn.net/files/7886/369/t_and_t-fabric-neoforge-1.13.11.jar"
+
+  - name: FallingTree-26.1.2-25.jar
+    url: "https://mediafilez.forgecdn.net/files/8129/3/FallingTree-26.1.2-25.jar"
