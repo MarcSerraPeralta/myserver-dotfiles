@@ -17,6 +17,7 @@
     - grafana
     - papra
     - jellyfin
+    - immich
     - immich-scripts
     - bot-expenses
     - minecraft-server
