@@ -19,5 +19,6 @@
     - jellyfin
     - immich
     - immich-scripts
+    - synapse
     - bot-expenses
     - minecraft-server

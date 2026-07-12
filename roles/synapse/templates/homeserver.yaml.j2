@@ -1,0 +1,51 @@
+# Configuration file for Synapse.
+#
+# This is a YAML file: see [1] for a quick introduction. Note in particular
+# that *indentation is important*: all the elements of a list or dictionary
+# should have the same indentation.
+#
+# [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+#
+# For more information on how to configure Synapse, including a complete accounting of
+# each option, go to docs/usage/configuration/config_documentation.md or
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+server_name: "servidoret.com"
+public_baseurl: "https://matrix.servidoret.com/"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8008
+    resources:
+    - compress: false
+      names: [client]
+    tls: false
+    type: http
+    x_forwarded: true
+database:
+  name: sqlite3
+  args:
+    database: /data/homeserver.db
+log_config: "/data/servidoret.com.log.config"
+media_store_path: /data/media_store
+registration_shared_secret: "{{ synapse_registration_shared_secret }}"
+report_stats: true
+macaroon_secret_key: "{{ synapse_macaroon_secret_key }}"
+form_secret: "{{ synapse_form_secret }}"
+signing_key_path: "/data/servidoret.com.signing.key"
+federation_enabled: false
+
+password_config:
+  enabled: true
+  localdb_enabled: true
+email:
+  smtp_host: smtp.gmail.com
+  smtp_port: 587
+  smtp_user: "{{ email_bot_servidoret_account }}"
+  smtp_pass: "{{ email_bot_servidoret_app_password }}"
+
+  require_transport_security: true
+  enable_tls: true
+
+  notif_from: "Matrix <{{ email_bot_servidoret_account }}>"
+  app_name: Matrix
+
+# vim:ft=yaml

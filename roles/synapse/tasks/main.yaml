@@ -1,0 +1,73 @@
+---
+- name: Create Synapse configuration directory
+  ansible.builtin.file:
+    path: /opt/synapse
+    state: directory
+    mode: "0755"
+
+- name: Create Synapse data directory
+  ansible.builtin.file:
+    path: /srv/synapse
+    state: directory
+    owner: "991"
+    group: "991"
+    mode: "0750"
+
+- name: Deploy docker-compose.yml
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /opt/synapse/docker-compose.yml
+    mode: "0644"
+  notify: Restart Synapse
+
+- name: Install Synapse signing key
+  ansible.builtin.template:
+    src: servidoret.com.signing.key.j2
+    dest: "/srv/synapse/servidoret.signing.key"
+    owner: "991"
+    group: "991"
+    mode: "0600"
+  notify: Restart Synapse
+
+- name: Deploy homeserver.yaml
+  ansible.builtin.template:
+    src: homeserver.yaml.j2
+    dest: /srv/synapse/homeserver.yaml
+    owner: root
+    group: root
+    mode: "0640"
+  notify: Restart Synapse
+
+- name: Ensure Synapse is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/synapse
+    state: present
+
+- name: Wait for Synapse to become healthy
+  community.docker.docker_container_info:
+    name: synapse
+  register: synapse_container
+  until:
+    - synapse_container.container.State.Status == "running"
+    - synapse_container.container.State.Health.Status == "healthy"
+  retries: 20
+  delay: 5
+
+- name: Register Synapse admin user
+  community.docker.docker_container_exec:
+    container: synapse
+    argv:
+      - register_new_matrix_user
+      - "-u"
+      - marc
+      - "-p"
+      - "{{ synapse_marc_password }}"
+      - "-a"
+      - "-k"
+      - "{{ synapse_registration_shared_secret }}"
+      - http://localhost:8008
+  register: synapse_admin
+  changed_when: "'Success' in synapse_admin.stdout"
+  failed_when: >
+    synapse_admin.rc != 0 and
+    "User ID already taken" not in synapse_admin.stdout

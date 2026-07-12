@@ -1,0 +1,15 @@
+services: 
+  synapse: 
+    image: ghcr.io/element-hq/synapse:latest 
+    container_name: synapse 
+    restart: unless-stopped 
+
+    volumes: 
+      - /srv/synapse:/data 
+    
+    environment: 
+      SYNAPSE_SERVER_NAME: servidoret.com 
+      SYNAPSE_REPORT_STATS: "no" 
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml    
+
+    ports: []
