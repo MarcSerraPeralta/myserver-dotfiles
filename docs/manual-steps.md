@@ -12,6 +12,7 @@ Here is a list of steps that need to be manually taken after running this Ansibl
 
 # thinkpad-backup
 
+- Download the file `docs/thinkpad-backup/backup_to_myserver.sh`
 - Set up the systemd service in the thinkpad to automatically back up to my server
 
 
