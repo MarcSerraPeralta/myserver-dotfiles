@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Home Server</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<style>
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    h1 {
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.6rem;
+        width: min(700px, 90%);
+    }
+
+    .card {
+        aspect-ratio: 0.9 / 1;
+        background: #1e293b;
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        border: 1px solid #334155;
+        transition: 0.2s ease;
+        padding: 1rem;
+    }
+
+    .card:hover {
+        background: #334155;
+        transform: translateY(-4px);
+    }
+
+    .icon {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+    }
+
+    .title {
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Servidoret</h1>
+
+<div class="grid">
+
+    <a class="card" href="https://jellyfin.servidoret.com">
+        <img class="icon" src="icons/jellyfin.svg" alt="Jellyfin">
+        <div class="title">Jellyfin</div>
+    </a>
+
+    <a class="card" href="https://immich.servidoret.com">
+        <img class="icon" src="icons/immich.svg" alt="Immich">
+        <div class="title">Immich</div>
+    </a>
+
+    <a class="card" href="https://pihole.servidoret.com">
+        <img class="icon" src="icons/pihole.svg" alt="Pi-hole">
+        <div class="title">Pi-hole</div>
+    </a>
+
+    <a class="card" href="https://papra.servidoret.com">
+        <img class="icon" src="icons/papra.svg" alt="Papra">
+        <div class="title">Papra</div>
+    </a>
+
+    <a class="card" href="https://cites.servidoret.com">
+        <img class="icon" src="icons/cites.svg" alt="Cites">
+        <div class="title">Cites</div>
+    </a>
+
+    <a class="card" href="https://login.tailscale.com/admin/machines">
+        <img class="icon" src="icons/tailscale.svg" alt="Tailscale">
+        <div class="title">Tailscale</div>
+    </a>
+
+</div>
+
+<h2>Monitoring</h2>
+<div class="grid">
+
+    <a class="card" href="https://grafana.servidoret.com/d/advxtmj/server-stats?orgId=1&from=now-1h&to=now&timezone=browser&refresh=5s">
+        <img class="icon" src="icons/grafana-stats.svg" alt="Server stats">
+        <div class="title">Server stats</div>
+    </a>
+
+    <a class="card" href="https://grafana.servidoret.com/d/admgfbp/server-disk-usage?orgId=1&from=now-6h&to=now&timezone=browser&refresh=1d">
+        <img class="icon" src="icons/grafana-hdd.svg" alt="Server disk">
+        <div class="title">Server disk</div>
+    </a>
+
+    <a class="card" href="https://grafana.servidoret.com/d/adhvldr/weather-station?orgId=1&from=now-6h&to=now&timezone=browser&refresh=30s">
+        <img class="icon" src="icons/weather.svg" alt="Weather station">
+        <div class="title">Weather station</div>
+    </a>
+
+    <a class="card" href="http://192.168.0.1">
+        <img class="icon" src="icons/router.svg" alt="Router">
+        <div class="title">Router</div>
+    </a>
+</div>
+
+</body>
+</html>
