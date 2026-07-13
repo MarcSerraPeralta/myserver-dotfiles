@@ -7,3 +7,19 @@
 - name: Set timezone
   timezone:
     name: Europe/Amsterdam
+
+- name: Install .bashrc
+  ansible.builtin.copy:
+    src: .bashrc
+    dest: /home/marc/.bashrc
+    owner: marc
+    group: marc
+    mode: "0644"
+
+- name: Install .selected_editor
+  ansible.builtin.copy:
+    src: .selected_editor
+    dest: /home/marc/.selected_editor
+    owner: marc
+    group: marc
+    mode: "0644"
