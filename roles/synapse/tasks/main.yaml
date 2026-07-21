@@ -33,9 +33,9 @@
   ansible.builtin.template:
     src: homeserver.yaml.j2
     dest: /srv/synapse/homeserver.yaml
-    owner: root
-    group: root
-    mode: "0640"
+    owner: "991"
+    group: "991"
+    mode: "0600"
   notify: Restart Synapse
 
 - name: Ensure Synapse is running
