@@ -1,0 +1,48 @@
+---
+- name: Create monitoring directory
+  ansible.builtin.file:
+    path: /opt/monitoring
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Create monitoring data directory
+  ansible.builtin.file:
+    path: /opt/monitoring/data
+    state: directory
+    owner: marc
+    group: marc
+    mode: "0755"
+
+- name: Install monitoring systemd service
+  ansible.builtin.copy:
+    src: monitoring-data-http.service
+    dest: /etc/systemd/system/monitoring-data-http.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart monitoring
+
+- name: Copy monitoring scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /opt/monitoring/
+    owner: marc
+    group: marc
+    mode: "0644"
+  loop:
+    - log_cpu_temperature.sh
+    - log_cpu_usage.sh
+    - log_disk_usage.sh
+    - log_network_usage.sh
+    - log_ram_usage.sh
+    - log_srv_disk_usage.sh
+
+- name: Enable and start monitoring service
+  ansible.builtin.systemd:
+    name: monitoring-data-http
+    enabled: true
+    state: started

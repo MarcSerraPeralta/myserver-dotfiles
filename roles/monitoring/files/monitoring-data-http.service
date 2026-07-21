@@ -1,0 +1,12 @@
+[Unit]
+Description=HTTP server for the monitoring data
+After=network.target
+
+[Service]
+User=marc
+WorkingDirectory=/opt/monitoring/data
+ExecStart=/usr/bin/python3 -m http.server 8081
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
