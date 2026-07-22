@@ -1,0 +1,7 @@
+[Unit]
+Description=Monitor srv-msata disk usage
+
+[Service]
+Type=oneshot
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_srv-msata_disk_usage.sh

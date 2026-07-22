@@ -1,0 +1,8 @@
+[Unit]
+Description=Monitor srv disk usage
+
+[Service]
+Type=oneshot
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_srv_disk_usage.sh
+

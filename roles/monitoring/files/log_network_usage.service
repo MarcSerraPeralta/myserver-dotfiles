@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor network usage
+After=network.target
+
+[Service]
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_network_usage.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

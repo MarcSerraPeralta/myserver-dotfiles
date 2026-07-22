@@ -1,0 +1,9 @@
+[Unit]
+Description=Run srv-msata disk usage at 4:30am every day
+
+[Timer]
+OnCalendar=*-*-* 04:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

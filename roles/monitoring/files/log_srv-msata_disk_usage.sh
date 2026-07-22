@@ -1,5 +1,5 @@
 #!/bin/bash
-LOGFILE="/home/marc/monitoring/data/srv-msata_disk_use.csv"
+LOGFILE="/opt/monitoring/data/srv-msata_disk_use.csv"
 BASE_DIR="/srv_msata"
 
 TMPFILE="$(mktemp)"

@@ -1,7 +1,7 @@
 #!/bin/bash
-LOGFILE_I="/home/marc/monitoring/data/cpu_temp.csv"
-LOGFILE_H="/home/marc/monitoring/data/cpu_temp_last-hour.csv"
-LOGFILE_D="/home/marc/monitoring/data/cpu_temp_last-day.csv"
+LOGFILE_I="/opt/monitoring/data/cpu_temp.csv"
+LOGFILE_H="/opt/monitoring/data/cpu_temp_last-hour.csv"
+LOGFILE_D="/opt/monitoring/data/cpu_temp_last-day.csv"
 MAX_LINES_H=800
 MAX_LINES_D=3000
 

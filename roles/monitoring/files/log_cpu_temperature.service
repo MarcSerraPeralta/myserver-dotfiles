@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor CPU temperature
+After=network.target
+
+[Service]
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_cpu_temperature.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

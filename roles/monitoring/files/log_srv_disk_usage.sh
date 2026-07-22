@@ -1,5 +1,5 @@
 #!/bin/bash
-LOGFILE="/home/marc/monitoring/data/srv_disk_use.csv"
+LOGFILE="/opt/monitoring/data/srv_disk_use.csv"
 BASE_DIR="/srv"
 
 TMPFILE="$(mktemp)"

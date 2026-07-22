@@ -1,0 +1,12 @@
+[Unit]
+Description=Monitor CPU usage
+After=network.target
+
+[Service]
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_cpu_usage.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,5 +1,5 @@
 #!/bin/bash
-LOGFILE="/home/marc/monitoring/data/disk_use.csv"
+LOGFILE="/opt/monitoring/data/disk_use.csv"
 
 while true; do
   DISK_USAGE=$(df -k / | awk 'NR==2 {print $3 "," $4 "," $3 / ($3 + $4)}')

@@ -5,5 +5,14 @@
 
 - name: Restart monitoring
   ansible.builtin.systemd:
-    name: monitoring-data-http
+    name: "{{ item }}"
     state: restarted
+  loop:
+    - monitoring-data-http
+    - log_cpu_temperature
+    - log_cpu_usage
+    - log_disk_usage
+    - log_network_usage
+    - log_ram_usage
+    - log_srv_disk_usage
+    - log_srv-msata_disk_usage

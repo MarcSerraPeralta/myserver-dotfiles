@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor RAM usage
+After=network.target
+
+[Service]
+User=marc
+ExecStart=/bin/bash /opt/monitoring/log_ram_usage.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

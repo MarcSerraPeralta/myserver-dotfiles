@@ -1,7 +1,7 @@
 #!/bin/bash
-LOGFILE_I="/home/marc/monitoring/data/ram_use.csv"
-LOGFILE_H="/home/marc/monitoring/data/ram_use_last-hour.csv"
-LOGFILE_D="/home/marc/monitoring/data/ram_use_last-day.csv"
+LOGFILE_I="/opt/monitoring/data/ram_use.csv"
+LOGFILE_H="/opt/monitoring/data/ram_use_last-hour.csv"
+LOGFILE_D="/opt/monitoring/data/ram_use_last-day.csv"
 MAX_LINES_H=800
 MAX_LINES_D=3000
 
