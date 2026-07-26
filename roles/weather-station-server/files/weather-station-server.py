@@ -2,7 +2,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import pathlib
 
-DATA_DIR = pathlib.Path("/home/marc/monitoring/data")
+DATA_DIR = pathlib.Path("/opt/monitoring/data")
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):

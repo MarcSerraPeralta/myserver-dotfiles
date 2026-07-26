@@ -65,5 +65,11 @@
     - log_disk_usage
     - log_network_usage
     - log_ram_usage
+
+- name: Enable monitoring service
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+  loop:
     - log_srv_disk_usage
     - log_srv-msata_disk_usage
