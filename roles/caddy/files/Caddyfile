@@ -95,3 +95,13 @@ papra.servidoret.com {
         reverse_proxy 100.100.50.50:1221
 }
 
+hanabi.servidoret.com {
+        tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+        reverse_proxy /ws/* localhost:8082
+
+        root * /var/www/hanabi
+        file_server
+}

@@ -1,0 +1,55 @@
+---
+- name: Install Python dependencies
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-virtualenv
+    state: present
+    update_cache: true
+
+- name: Ensure required deployment directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /var/www/hanabi
+    - /opt/fireworks-game
+
+- name: Copy static frontend file (index.html)
+  copy:
+    src: index.html
+    dest: /var/www/hanabi/index.html
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy Python backend files
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/fireworks-game/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - server.py
+    - engine.py
+    - render.py
+    - requirements.txt
+
+- name: Copy game control script
+  copy:
+    src: game.sh
+    dest: /opt/fireworks-game/game.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install Python requirements
+  ansible.builtin.pip:
+    requirements: /opt/fireworks-game/requirements.txt
+    virtualenv: /opt/fireworks-game/venv
+    virtualenv_python: python3
