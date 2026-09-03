@@ -47,6 +47,14 @@
   environment:
     PATH: "/opt/bot-expenses/bin:{{ ansible_env.PATH }}"
 
+- name: Ensure Matrix bot store is owned by me
+  ansible.builtin.file:
+    path: "{{ bot_expenses_store_dir }}"
+    state: directory
+    owner: marc
+    group: marc
+    recurse: true
+
 - name: Create expenses root directory
   ansible.builtin.file:
     path: /srv_msata/expenses

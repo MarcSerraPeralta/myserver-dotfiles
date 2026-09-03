@@ -233,7 +233,7 @@ def plot_xarray(ds: xr.Dataset, title: str) -> plt.Figure:
     sav: list[float] = []
     for xi, month in zip(x, months):
         curr_pos, curr_neg = 0, 0
-        for c in all_categories:
+        for c in ds.category.values:
             value: float = expenses.sel(month=month, category=c).values
             if value > 0:
                 curr_pos += value
