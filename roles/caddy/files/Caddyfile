@@ -114,3 +114,12 @@ exercicis.servidoret.com {
 	root * /var/www/exercicis
 	file_server
 }
+
+random.servidoret.com {
+        tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+	root * /var/www/random
+	file_server
+}

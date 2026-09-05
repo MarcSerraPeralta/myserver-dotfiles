@@ -15,8 +15,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         min-height: 100vh;
+	padding: 10px 0;
     }
 
     h1 {
@@ -26,9 +26,10 @@
 
     .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fit, 180px);
         gap: 0.6rem;
-        width: min(700px, 90%);
+        width: 95%;
+	justify-content: center;
     }
 
     .card {
@@ -79,6 +80,11 @@
     <a class="card" href="https://exercicis.servidoret.com">
         <img class="icon" src="icons/bracos.svg" alt="Exercicis">
         <div class="title">Exercicis</div>
+    </a>
+
+    <a class="card" href="https://random.servidoret.com">
+        <img class="icon" src="icons/random.svg" alt="Random">
+        <div class="title">Random plans</div>
     </a>
 
 </div>

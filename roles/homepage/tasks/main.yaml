@@ -51,3 +51,21 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Create random directory
+  ansible.builtin.file:
+    path: /var/www/random
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy random files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/www/random/
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - random/index.html
