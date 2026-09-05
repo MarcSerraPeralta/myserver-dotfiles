@@ -25,3 +25,29 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Create exercicis directory
+  ansible.builtin.file:
+    path: /var/www/exercicis
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy exercicis files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /var/www/exercicis/
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - exercicis/index.html
+
+- name: Copy homepage icons
+  ansible.builtin.copy:
+    src: exercicis/icons/
+    dest: /var/www/exercicis/icons/
+    owner: root
+    group: root
+    mode: "0644"

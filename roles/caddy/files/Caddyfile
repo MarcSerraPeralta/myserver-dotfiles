@@ -105,3 +105,12 @@ hanabi.servidoret.com {
         root * /var/www/hanabi
         file_server
 }
+
+exercicis.servidoret.com {
+        tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+
+	root * /var/www/exercicis
+	file_server
+}

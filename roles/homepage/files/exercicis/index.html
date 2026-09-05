@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Exercicis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<style>
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    h1 {
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.6rem;
+        width: min(700px, 90%);
+    }
+
+    .card {
+        aspect-ratio: 0.9 / 1;
+        background: #1e293b;
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        border: 1px solid #334155;
+        transition: 0.2s ease;
+        padding: 1rem;
+    }
+
+    .card:hover {
+        background: #334155;
+        transform: translateY(-4px);
+    }
+
+    .icon {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+    }
+
+    .title {
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Exercicis</h1>
+
+<h2>8 minuts</h2>
+<div class="grid">
+
+    <a class="card" href="https://www.youtube.com/watch?v=1ycouUJKj6c&t=40s">
+        <img class="icon" src="icons/abdominals.svg" alt="Abdominals">
+        <div class="title">Abdominals</div>
+    </a>
+
+    <a class="card" href="https://www.youtube.com/watch?v=CxYT5cS4ljA&t=25s">
+        <img class="icon" src="icons/bracos.svg" alt="Braços">
+        <div class="title">Braços</div>
+    </a>
+
+    <a class="card" href="https://www.youtube.com/watch?v=B0lF0gDzaAc&t=17s">
+        <img class="icon" src="icons/cames.svg" alt="Cames">
+        <div class="title">Cames</div>
+    </a>
+</div>
+
+</body>
+</html>
