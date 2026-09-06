@@ -7,3 +7,6 @@
 - text: "Tallar pollastre sencer"
   icon: "🍗"
   done: false
+- text: "Cuinar calamars farcits"
+  icon: "🦑"
+  done: false
