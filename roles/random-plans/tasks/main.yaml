@@ -1,0 +1,67 @@
+---
+- name: Ensure target directory exists
+  ansible.builtin.file:
+    path: /var/www/random
+    state: directory
+    owner: marc
+    group: marc
+    mode: '0755'
+
+- name: Install Python pre-requisites
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-venv
+      - python3-pip
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Copy application files (index.html, server.py)
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/var/www/random/{{ item }}"
+    owner: marc
+    group: marc
+    mode: '0644'
+  loop:
+    - index.html
+    - server.py
+  notify: Restart random-plans
+
+- name: Copy plans.yaml if it does not already exist
+  ansible.builtin.copy:
+    src: plans.yaml
+    dest: /var/www/random/plans.yaml
+    owner: marc
+    group: marc
+    mode: '0644'
+
+- name: Set up virtualenv and install Python dependencies
+  ansible.builtin.pip:
+    name:
+      - flask
+      - pyyaml
+    virtualenv: /var/www/random/venv
+    virtualenv_command: python3 -m venv
+  become: true
+  become_user: marc
+
+- name: Copy systemd service file
+  ansible.builtin.copy:
+    src: random-plans.service
+    dest: /etc/systemd/system/random-plans.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify:
+    - Reload systemd
+    - Restart random-plans
+
+- name: Ensure random-plans service is enabled and started
+  ansible.builtin.systemd:
+    name: random-plans
+    enabled: true
+    state: started
+  become: true

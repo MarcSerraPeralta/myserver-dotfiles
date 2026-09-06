@@ -1,0 +1,17 @@
+[Unit]
+Description=Random Plans Website Python Server
+After=network.target
+Wants=notifier-start@%n
+OnSuccess=notifier-stop@%n
+OnFailure=notifier-failure@%n
+
+[Service]
+User=marc
+Group=marc
+WorkingDirectory=/var/www/random
+ExecStart=/var/www/random/venv/bin/python /var/www/random/server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

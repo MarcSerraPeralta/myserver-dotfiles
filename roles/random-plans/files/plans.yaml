@@ -1,0 +1,9 @@
+- text: "Cuinar ou d'estruç"
+  icon: "🥚"
+  done: false
+- text: "Cuinar pasta des de 0"
+  icon: "🍝"
+  done: false
+- text: "Tallar pollastre sencer"
+  icon: "🍗"
+  done: false
