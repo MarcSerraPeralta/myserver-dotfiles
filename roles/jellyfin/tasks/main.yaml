@@ -33,8 +33,8 @@
   ansible.builtin.copy:
     src: network.xml
     dest: /etc/jellyfin/network.xml
-    owner: root
-    group: root
+    owner: jellyfin
+    group: jellyfin
     mode: "0644"
   notify: Restart jellyfin
 
@@ -42,8 +42,8 @@
   ansible.builtin.copy:
     src: system.xml
     dest: /etc/jellyfin/system.xml
-    owner: root
-    group: root
+    owner: jellyfin
+    group: jellyfin
     mode: "0644"
   notify: Restart jellyfin
 
