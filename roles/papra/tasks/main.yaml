@@ -30,6 +30,15 @@
     mode: "0600"
   notify: Restart Papra
 
+- name: Copy cloudflared.env
+  ansible.builtin.template:
+    src: cloudflared.env.j2
+    dest: /opt/papra/cloudflared.env
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Restart Papra
+
 - name: Start Papra
   community.docker.docker_compose_v2:
     project_src: /opt/papra

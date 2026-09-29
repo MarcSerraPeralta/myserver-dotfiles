@@ -12,3 +12,11 @@ services:
 
     volumes:
       - ./app-data:/app/app-data
+
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file:
+      - cloudflared.env
