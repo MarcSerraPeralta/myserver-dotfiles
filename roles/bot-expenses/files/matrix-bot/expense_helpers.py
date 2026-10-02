@@ -73,7 +73,7 @@ def process_abn_amro(filename: Path) -> tuple[pd.DataFrame, list[str]]:
     warnings: list[str] = []
 
     # checks
-    account_numbers = [104989904, 147785936]
+    account_numbers = [104989904, 147785936, 158103416]
     if set(df["accountNumber"]) > set(account_numbers):
         warnings.append("Different account number found in ABN AMRO file")
     currency = "EUR"
@@ -81,7 +81,8 @@ def process_abn_amro(filename: Path) -> tuple[pd.DataFrame, list[str]]:
         warnings.append("Non Euro currency found in ABN AMRO file")
 
     add_deposit = False
-    if 147785936 not in set(df["accountNumber"]):
+    #if 147785936 not in set(df["accountNumber"]):
+    if 158103416 not in set(df["accountNumber"]):
         add_deposit = True
 
     df.rename(
@@ -107,7 +108,7 @@ def process_abn_amro(filename: Path) -> tuple[pd.DataFrame, list[str]]:
         df.loc[len(df)] = [
             int(date.replace("-", "") + "01"),
             0.00,
-            40_000.00,
+            70_000.00,
             "ABN AMRO Savings",
             "Deposit at ABN AMRO Savings",
         ]
@@ -229,7 +230,7 @@ def plot_summary(date: str):
     ds = get_xarray(month, num_months)
     fig = plot_xarray(ds, title=title)
 
-    fig.savefig(PLOTS_DIR / f"{date}_summary.jpg", dpi=300, format="jpg")
+    fig.savefig(PLOTS_DIR / f"{date}_summary.jpg", dpi=500, format="jpg")
     return
 
 

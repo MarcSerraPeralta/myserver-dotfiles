@@ -42,7 +42,7 @@ LONG_ALPHABETIC = {
     12: "December",
 }
 
-SKIP_CATEGORIES = ("salary", "rent")
+SKIP_CATEGORIES = [] #("salary", "rent")
 CATEGORY_COLORS = {
     "rent": "peru",
     "supermarket": "yellow",
@@ -372,10 +372,7 @@ def plot_xarray(ds: xr.Dataset, title: str) -> plt.Figure:
     ax.set_yticklabels([])
 
     # category plots
-    total_neg_exp = sum(negative_exp.values())
-    percentages = {c: v / total_neg_exp for c, v in negative_exp.items()}
-    ordered = sorted(percentages.items(), key=lambda x: x[1], reverse=True)
-    categories_ordered = [c for c, _ in ordered if c not in SKIP_CATEGORIES]
+    categories_ordered = sorted(categories, key=lambda x: expenses.sel(month=months[-1], category=c).item())
 
     curr_height = 5
 

@@ -31,11 +31,19 @@ from expense_helpers import (
 _ = load_dotenv("/opt/bot-expenses/bot-expenses.env")
 
 PLOTS_DIR: Path = Path(os.environ.get("PLOTS_DIR"))
+DATA_DIR: Path = Path(os.environ.get("DATA_DIR"))
 SUMMARY_ROOM_ID: str = os.environ.get("SUMMARY_ROOM_ID")
 CATEGORIES_FILE: str = os.environ.get("CATEGORIES_FILE")
 
 with open(CATEGORIES_FILE, "r") as file:
     CATEGORIES: list[str] = list(yaml.safe_load(file))
+
+POPULAR_CATEGORIES = [
+    "supermarket",
+    "restaurants",
+    "bar",
+    "more categories...",
+]
 
 
 async def get_bank_statements(client: AsyncClient) -> str:
@@ -89,24 +97,30 @@ async def request_missing_categories(
 
     answers: list[str] = []
     for element in unclassified_elements:
-        poll_answered_signal.clear()
+        for options in [POPULAR_CATEGORIES, CATEGORIES]:
+            poll_answered_signal.clear()
 
-        poll_id = await send_poll(client, room_id, question=element, options=CATEGORIES)
-        bot_context["active_poll_id"] = poll_id
+            poll_id = await send_poll(client, room_id, question=element, options=options)
+            bot_context["active_poll_id"] = poll_id
 
-        while not poll_answered_signal.is_set():
-            _ = await client.sync(timeout=5000, full_state=False)
-            await asyncio.sleep(0.5)
+            while not poll_answered_signal.is_set():
+                _ = await client.sync(timeout=5000, full_state=False)
+                await asyncio.sleep(0.5)
 
-        selected_id = int(bot_context["user_selection"])
-        answer = CATEGORIES[selected_id]
+            selected_id = int(bot_context["user_selection"])
+            answer = options[selected_id]
+
+            if answer != POPULAR_CATEGORIES[-1]:
+                break
+
         answers.append(answer)
 
     return answers
 
 
-async def send_summary(client: AsyncClient, date_str: str, room_id: str) -> None:
-    await delete_room(client, room_id)
+async def send_summary(client: AsyncClient, date_str: str, room_id: str | None = None) -> None:
+    if room_id is not None:
+        await delete_room(client, room_id)
 
     image_path = PLOTS_DIR / f"{date_str}_summary.jpg"
     await send_image(client, image_path, SUMMARY_ROOM_ID)
@@ -132,18 +146,20 @@ if __name__ == "__main__":
     asyncio.set_event_loop(loop)
 
     client = loop.run_until_complete(get_authenticated_client())
+    room_id = None
 
-    room_id = loop.run_until_complete(get_bank_statements(client))
-    relabel_bank_statement_files(DATE_STR)
+    if not (DATA_DIR / f"{DATE_STR}_processed.csv").exists():
+        room_id = loop.run_until_complete(get_bank_statements(client))
+        relabel_bank_statement_files(DATE_STR)
 
-    unclassified_elements, warnings = process_expenses(DATE_STR)
-    if warnings:
-        loop.run_until_complete(acknowledge_warnings(client, warnings, room_id))
+        unclassified_elements, warnings = process_expenses(DATE_STR)
+        if warnings:
+            loop.run_until_complete(acknowledge_warnings(client, warnings, room_id))
 
-    answers = loop.run_until_complete(
-        request_missing_categories(client, unclassified_elements, room_id)
-    )
-    add_missing_categories(DATE_STR, answers)
+        answers = loop.run_until_complete(
+            request_missing_categories(client, unclassified_elements, room_id)
+        )
+        add_missing_categories(DATE_STR, answers)
 
     plot_summary(DATE_STR)
     loop.run_until_complete(send_summary(client, DATE_STR, room_id))
