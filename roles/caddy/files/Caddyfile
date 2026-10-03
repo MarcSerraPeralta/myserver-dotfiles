@@ -125,3 +125,9 @@ random.servidoret.com {
         file_server
 }
 
+uptime.servidoret.com {
+        tls {
+                dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        }
+        reverse_proxy 127.0.0.1:3001
+}

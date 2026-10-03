@@ -1,0 +1,30 @@
+---
+- name: Create Uptime Kuma host directory structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - /opt/uptime-kuma
+    - /opt/uptime-kuma/data
+
+- name: Copy Docker Compose file
+  ansible.builtin.copy:
+    src: docker-compose.yaml
+    dest: /opt/uptime-kuma/docker-compose.yml
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Ensure user belongs to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
+
+- name: Start Uptime kuma stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/uptime-kuma
+    state: present

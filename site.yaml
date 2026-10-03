@@ -6,6 +6,7 @@
     - initial-setup
     - monitoring
     - notifier
+    - uptime-kuma
     - homepage
     - random-plans
     - fireworks-game
