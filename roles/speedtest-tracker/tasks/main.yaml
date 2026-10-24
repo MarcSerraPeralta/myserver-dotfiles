@@ -1,0 +1,29 @@
+---
+- name: Create base application directory
+  ansible.builtin.file:
+    path: /opt/speedtest-tracker
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create Speedtest Tracker config directory with container permissions
+  ansible.builtin.file:
+    path: /opt/speedtest-tracker/config
+    state: directory
+    owner: "1000"   # Matches PUID in docker-compose.yml
+    group: "1000"   # Matches PGID in docker-compose.yml
+    mode: "0775"
+
+- name: Render Docker Compose file from template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /opt/speedtest-tracker/docker-compose.yml
+    owner: root
+    group: root
+    mode: "0600" # Restricted mode since it contains secrets
+
+- name: Start Speedtest Tracker stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/speedtest-tracker
+    state: present
